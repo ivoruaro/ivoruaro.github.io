@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CombatKai</title>
+
+<style>
+/* RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+body {
+  background: #022c22; /* verde bosco profondo */
+  color: #d1fae5;      /* verde chiarissimo */
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  padding: 20px;
+}
+
+/* CONTENITORE CENTRALE RESPONSIVE */
+.page {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 10px;
+}
+
+/* BOX */
+.container-box {
+  background: #064e3b; /* verde bosco medio */
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(16,185,129,0.35); /* smeraldo soft */
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+.container-box h1 {
+  font-size: 22px;
+  margin-bottom: 14px;
+  color: #34d399; /* verde smeraldo */
+  text-align: center;
+}
+
+/* RIGHE */
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.field {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 14px;
+  color: #a7f3d0; /* verde chiaro */
+}
+
+.field input {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #065f46; /* verde bosco intenso */
+  background: #022c22;       /* verde profondo */
+  color: #d1fae5;
+  font-size: 18px;
+  text-align: center;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #34d399;
+  box-shadow: 0 0 0 3px rgba(52,211,153,0.35); /* glow smeraldo */
+}
+
+/* BOTTONE */
+button {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #34d399, #059669); /* smeraldo → bosco */
+  color: #022c22;
+  box-shadow: 0px 0px 10px rgba(52,211,153,0.35);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* NUMERO RANDOM */
+.numero {
+  font-size: clamp(32px, 8vw, 60px);
+  text-align: center;
+  padding: 10px 0;
+  font-weight: 700;
+  color: #34d399;
+  text-shadow: 0 0 5px rgba(52,211,153,0.45);
+}
+
+/* ENDURANCE */
+h1 {
+  font-size: 22px;
+  color: #34d399;
+  text-align: center;
+  margin-top: 10px;
+}
+
+input[readonly] {
+  background: #064e3b;
+  border: 1px solid #065f46;
+  color: #ecfdf5;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 18px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* BREAKPOINTS */
+
+/* Tablet */
+@media (min-width: 600px) {
+  .page {
+    max-width: 700px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 900px) {
+  .page {
+    max-width: 900px;
+  }
+
+  .container-box h1,
+  h1 {
+    font-size: 26px;
+  }
+
+  .field input {
+    font-size: 20px;
+  }
+}
+
+/* ANIMAZIONE NUMERO (fade out + fade in) */
+.numero {
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.numero.anim {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+
+</style>
+</head>
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IB2cksfwAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAAd0SU1FB+oFDwoRNw17DqsAAAP3SURBVHja7ZtZaBNRFIa/SRT3DVO1xRa1LqCSqigqeXDDFRVxV0TwoYILuCDqiyDigws+6IMv+qK4gEVRBEUfBIW4pW5R1CqIxg21rVSsWG07PsyNBEnNzORMMpPmhwMhuXPm/n/m3nPvOXf8mEM50AmI4Q1MAcqA56ka+kw6LAKuAdtcTlwDNgCXgQJJxzsBXdkp9TS4DZ2BMwn9LDdzkc+CsnEsA24CpS4iPxi4BSyyeqEdAQCCwH1gngvIzwHuAMPtXOxLo11X4Bywx4IfSfjV0DwPdHf6ZrsTxlYyuwB0yyD5nsCVFH0qd/oJSMRcIAIMywD5IHAXmCbhzO4ckAyDgNvAAgfJL1ET8AAph5ICxENRhQPzgl/5PJ2tELwvxXhLZpeAHkLj/aqN+5dn4wlIxEw1VoenQb5MzS1Tnfpn2zj85AxUC5R9wFugBqgFfpq4dgRwCOjoZAfNCtCY5hJ1VxaGbZPkEGjEe8gLkBcgL4CcAL89KEBz/gnIC5AXIC9Aa54ERQVo70EBukg5mgDU2diOZtu+AqF0yc8GfniQfNzqgRl2yS8HfnmYfNwagMVWya9Vk4ieI9YIrDZLflsOEU+0ZlLUNjVgf46ST7SDiSm++Ac/cARYlc6MqQdD+l+ftZ8faO9eDhQIR5/0otL3BHqXgeYH0KLhJtVnuzgCrAGaNKAdRsV3vkDIrNaDoUCyH2o+xioDX96ONuWkoLiyZ2FJ0rZaNFyHTBWqAlihqQ8LBRcgMT0YKmmh881mFl96MHn41qLhj0ChYF8rfMAW4Lqg0xItGn7awm/1dvfxWjRcJUz+BrDVB7wBJgPbVdyXwNDdVQ8jSb7vbGfjpUXDD4AhQn1rUNFgEvDal6D6XmAc8FTiLjsa6sfcir2MJIk0lvYnh15EI8BIIfJPgLEYdYoWM0YdMAoSzRJhp7qgOKIHQ7qKEKYs3v59oG9EKPQ1AQesbuqmAx8kOqAX9q+0LEBR6T0h8jE1xG0hAJwV6kiVhbbPhe55EqHTI6uAbx5a7dUCS6UTDP1U6HA7+WtAsVNZFr8KIQ0uJP4b49CUnwxgjMUx7bQ9A0ZlOufWQe2ssk3+OFk+uTpDKlxatM8Yp9NcgV7AxQySv4JxgNtV0IDNDhP/AazD3pmljOGEgwJs9EJBojvGgShp8o+Btl6pysx2IKE5wWulqeOCAhzDg+itylPpkq8TzgRlFJsEBFiPh9EGeJQG+SjOn2Z1HBPTyOKMJ0dwxoYAR8khFAPfLZCvQfi9PzdgpwUBVpOD6IhRg0hF/i7ZeQstI5hlYuIbS47jfxPiYVoB+mBkbf8lX43xflCrwEqM3H8dRoL1FTbO8UjgDxD9ev0XEGizAAAAAElFTkSuQmCC">
+  <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IB2cksfwAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAOwwAADsMBx2+oZAAAAAd0SU1FB+oFDwoRNw17DqsAAAP3SURBVHja7ZtZaBNRFIa/SRT3DVO1xRa1LqCSqigqeXDDFRVxV0TwoYILuCDqiyDigws+6IMv+qK4gEVRBEUfBIW4pW5R1CqIxg21rVSsWG07PsyNBEnNzORMMpPmhwMhuXPm/n/m3nPvOXf8mEM50AmI4Q1MAcqA56ka+kw6LAKuAdtcTlwDNgCXgQJJxzsBXdkp9TS4DZ2BMwn9LDdzkc+CsnEsA24CpS4iPxi4BSyyeqEdAQCCwH1gngvIzwHuAMPtXOxLo11X4Bywx4IfSfjV0DwPdHf6ZrsTxlYyuwB0yyD5nsCVFH0qd/oJSMRcIAIMywD5IHAXmCbhzO4ckAyDgNvAAgfJL1ET8AAph5ICxENRhQPzgl/5PJ2tELwvxXhLZpeAHkLj/aqN+5dn4wlIxEw1VoenQb5MzS1Tnfpn2zj85AxUC5R9wFugBqgFfpq4dgRwCOjoZAfNCtCY5hJ1VxaGbZPkEGjEe8gLkBcgL4CcAL89KEBz/gnIC5AXIC9Aa54ERQVo70EBukg5mgDU2diOZtu+AqF0yc8GfniQfNzqgRl2yS8HfnmYfNwagMVWya9Vk4ieI9YIrDZLflsOEU+0ZlLUNjVgf46ST7SDiSm++Ac/cARYlc6MqQdD+l+ftZ8faO9eDhQIR5/0otL3BHqXgeYH0KLhJtVnuzgCrAGaNKAdRsV3vkDIrNaDoUCyH2o+xioDX96ONuWkoLiyZ2FJ0rZaNFyHTBWqAlihqQ8LBRcgMT0YKmmh881mFl96MHn41qLhj0ChYF8rfMAW4Lqg0xItGn7awm/1dvfxWjRcJUz+BrDVB7wBJgPbVdyXwNDdVQ8jSb7vbGfjpUXDD4AhQn1rUNFgEvDal6D6XmAc8FTiLjsa6sfcir2MJIk0lvYnh15EI8BIIfJPgLEYdYoWM0YdMAoSzRJhp7qgOKIHQ7qKEKYs3v59oG9EKPQ1AQesbuqmAx8kOqAX9q+0LEBR6T0h8jE1xG0hAJwV6kiVhbbPhe55EqHTI6uAbx5a7dUCS6UTDP1U6HA7+WtAsVNZFr8KIQ0uJP4b49CUnwxgjMUx7bQ9A0ZlOufWQe2ssk3+OFk+uTpDKlxatM8Yp9NcgV7AxQySv4JxgNtV0IDNDhP/AazD3pmljOGEgwJs9EJBojvGgShp8o+Btl6pysx2IKE5wWulqeOCAhzDg+itylPpkq8TzgRlFJsEBFiPh9EGeJQG+SjOn2Z1HBPTyOKMJ0dwxoYAR8khFAPfLZCvQfi9PzdgpwUBVpOD6IhRg0hF/i7ZeQstI5hlYuIbS47jfxPiYVoB+mBkbf8lX43xflCrwEqM3H8dRoL1FTbO8UjgDxD9ev0XEGizAAAAAElFTkSuQmCC">
+<body>
+  <div class="page">
+
+    <div class="container-box">
+      <h1>Combat Skill</h1>
+
+      <div class="row">
+        <div class="field">
+          <label for="loneWolfCombatSkill">Lone Wolf</label>
+          <input id="loneWolfCombatSkill" type="text" inputmode="numeric" pattern="[0-9]*">
+        </div>
+
+        <div class="field">
+          <label for="enemyCombatSkill">Enemy</label>
+          <input id="enemyCombatSkill" type="text" inputmode="numeric" pattern="[0-9]*">
+        </div>
+      </div>
+
+    </div>
+
+    <button onclick="combat()">Combat!</button>
+    <div id="randomNumber" class="numero">0</div>
+
+    <div class="container-box">
+        <h1>Endurance Lost</h1>
+
+        <div class="row">
+          <div class="field">
+            <label for="enduranceLostLoneWolf">Lone Wolf</label>
+            <input id="enduranceLostLoneWolf" type="text" readonly value="">
+          </div>
+
+          <div class="field">
+            <label for="enduranceLostEnemy">Enemy</label>
+            <input id="enduranceLostEnemy" type="text" readonly value="">
+          </div>
+        </div>
+    </div>
+  </div>
+
+<script>
+
+const loneWolfInput = document.getElementById("loneWolfCombatSkill");
+loneWolfInput.addEventListener("input", function () {
+  this.value = this.value.replace(/[^0-9]/g, "");
+});
+
+const enemyInput = document.getElementById("enemyCombatSkill");
+enemyInput.addEventListener("input", function () {
+  this.value = this.value.replace(/[^0-9]/g, "");
+});
+
+const combatTableLoneWolf = Array.from({ length: 10 }, () =>
+  Array.from({ length: 13 }, () => "")
+);
+
+const combatTableEnemy = Array.from({ length: 10 }, () =>
+  Array.from({ length: 13 }, () => "")
+);
+
+function setRow(array2d, y, rowArray) {
+  array2d[y] = rowArray.map(v => String(v));
+}
+
+setRow(combatTableLoneWolf, 1, [ "K", "K","-8","-6","-6","-5","-5","-5","-4","-4","-4","-3","-3"]);
+setRow(combatTableLoneWolf, 2, [ "K","-8","-7","-6","-5","-5","-4","-4","-3","-3","-3","-3","-2"]);
+setRow(combatTableLoneWolf, 3, ["-8","-7","-6","-5","-5","-4","-4","-3","-3","-3","-2","-2","-2"]);
+setRow(combatTableLoneWolf, 4, ["-8","-7","-6","-5","-4","-4","-3","-3","-2","-2","-2","-2","-2"]);
+setRow(combatTableLoneWolf, 5, ["-7","-6","-5","-4","-4","-3","-2","-2","-2","-2","-2","-2","-1"]);
+setRow(combatTableLoneWolf, 6, ["-6","-6","-5","-4","-3","-2","-2","-2","-2","-1","-1","-1","-1"]);
+setRow(combatTableLoneWolf, 7, ["-5","-5","-4","-3","-2","-2","-1","-1","-1", "0", "0", "0", "0"]);
+setRow(combatTableLoneWolf, 8, ["-4","-4","-3","-2","-1","-1", "0", "0", "0", "0", "0", "0", "0"]);
+setRow(combatTableLoneWolf, 9, ["-3","-3","-2", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]);
+setRow(combatTableLoneWolf, 0, [ "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]);
+
+setRow(combatTableEnemy, 1, ["0", "0", "0", "0","-1","-2","-3","-4","-5","-6","-7","-8","-9"]);
+setRow(combatTableEnemy, 2, ["0", "0", "0","-1","-2","-3","-4","-5","-6","-7","-8","-9","-10"]);
+setRow(combatTableEnemy, 3, ["0", "0","-1","-2","-3","-4","-5","-6","-7","-8","-9","-10","-11"]);
+setRow(combatTableEnemy, 4, ["0","-1","-2","-3","-4","-5","-6","-7","-8","-9","-10","-11","-12"]);
+setRow(combatTableEnemy, 5, ["-1","-2","-3","-4","-5","-6","-7","-8","-9","-10","-11","-12","-14"]);
+setRow(combatTableEnemy, 6, ["-2","-3","-4","-5","-6","-7","-8","-9","-10","-11","-12","-14","-16"]);
+setRow(combatTableEnemy, 7, ["-3","-4","-5","-6","-7","-8","-9","-10","-11","-12","-14","-16","-18"]);
+setRow(combatTableEnemy, 8, ["-4","-5","-6","-7","-8","-9","-10","-11","-12","-14","-16","-18","K"]);
+setRow(combatTableEnemy, 9, ["-5","-6","-7","-8","-9","-10","-11","-12","-14","-16","-18","K","K"]);
+setRow(combatTableEnemy, 0, ["-6","-7","-8","-9","-10","-11","-12","-14","-16","-18","K","K","K"]);
+
+
+
+function normalizeCombatRatio(value) {
+  const n = Number(value);
+  
+  switch (true) {
+    case (n < -10): return 0;
+    case (n === -10): case (n === -9): return 1;
+    case (n === -8): case (n === -7): return 2;
+    case (n === -6): case (n === -5): return 3;
+    case (n === -4): case (n === -3): return 4;
+    case (n === -2): case (n === -1): return 5;
+    case (n === 0): return 6;
+    case (n === 1): case (n === 2): return 7;
+    case (n === 3): case (n === 4): return 8;
+    case (n === 5): case (n === 6): return 9;
+    case (n === 7): case (n === 8): return 10;
+    case (n === 9): case (n === 10): return 11;
+    case (n > 10): return 12;  
+     
+    default:
+      return n; // ritorna il valore numerico originale
+  }
+}
+
+
+/* RANDOM 0-9 */
+function combat() {
+ 
+  const randomNumberEl = document.getElementById("randomNumber");
+  
+
+  // 🔥 1. PRIMA DELL'ANIMAZIONE: reset dei campi
+  document.getElementById("enduranceLostLoneWolf").value = "";
+  document.getElementById("enduranceLostEnemy").value = "";
+
+  // fase 1: fade out
+  randomNumberEl.classList.add("anim");
+
+  // fase 2: cambio numero + fade in
+  setTimeout(() => {
+    // genera numero casuale
+    const n = Math.floor(Math.random() * 10);
+    randomNumberEl.textContent = n;
+    randomNumberEl.classList.remove("anim");
+
+    // 🔥 2. DOPO L'ANIMAZIONE: calcolo dei valori
+    const combatRatio =
+      Number(document.getElementById("loneWolfCombatSkill").value) -
+      Number(document.getElementById("enemyCombatSkill").value);
+
+    const combatRatioNormalized = normalizeCombatRatio(combatRatio);
+
+    // numero casuale come indice
+    const randomValue = n;
+
+    // lettura tabella
+    const enduranceLostLoneWolf =
+      combatTableLoneWolf[n][combatRatioNormalized];
+
+    const enduranceLostEnemy =
+      combatTableEnemy[n][combatRatioNormalized];
+
+    // 🔥 3. DOPO L'ANIMAZIONE: valorizzazione dei campi con ritardo di 1 secondo
+  setTimeout(() => {
+    document.getElementById("enduranceLostLoneWolf").value = enduranceLostLoneWolf;
+    document.getElementById("enduranceLostEnemy").value = enduranceLostEnemy;
+  }, 1000);
+
+
+  }, 500); // durata animazione
+}
+
+</script>
+
+</body>
+</html>
