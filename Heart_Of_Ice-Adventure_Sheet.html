@@ -571,6 +571,29 @@ const STORAGE_KEY = "marker_pos_v1";
       loadPosition();
     });
 
+    let isScrolling = false;
+let startY = 0;
+
+container.addEventListener("touchstart", (e) => {
+  const t = e.touches[0];
+  startY = t.clientY;
+  isScrolling = false; // reset
+}, { passive: true });
+
+container.addEventListener("touchmove", (e) => {
+  const t = e.touches[0];
+  if (Math.abs(t.clientY - startY) > 10) {
+    isScrolling = true; // l’utente sta scrollando
+  }
+}, { passive: true });
+
+container.addEventListener("touchend", (e) => {
+  if (isScrolling) return; // non spostare il marcatore
+  const t = e.changedTouches[0];
+  handleClientCoords(t.clientX, t.clientY);
+});
+
+
 </script>
 
 
