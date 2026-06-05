@@ -1,28 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>KORG</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 16px;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <title>KORG</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        font-size: 16px;
+      }
 
-    body {
-      margin: 0;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      background: #111;
-      color: #f5f5f5;
-    }
+      body {
+        margin: 0;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        background: #111;
+        color: #f5f5f5;
+      }
 
-    /* --- DADO --- */
-    #dice {
+      /* --- DADO --- */
+      #dice {
         font-size: 4rem;
         font-weight: bold;
         color: #00eaff;
@@ -30,220 +35,345 @@
         margin-bottom: 0.1rem;
         cursor: pointer;
         user-select: none;
-        transition: transform 0.25s ease, opacity 0.25s ease;
-        }
+        transition:
+          transform 0.25s ease,
+          opacity 0.25s ease;
+      }
 
-        #dice.shrink {
+      #dice.shrink {
         transform: scale(0);
         opacity: 0;
-        }
+      }
 
-        #dice.grow {
+      #dice.grow {
         transform: scale(1);
         opacity: 1;
-        }
+      }
 
+      #dice.roll {
+        transform: scale(1.25) rotate(10deg);
+      }
 
-    #dice.roll {
-      transform: scale(1.25) rotate(10deg);
-    }
+      .dice-row {
+        display: flex;
+        gap: 1.1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+      }
 
-    .wrapper {
-      display: flex;
-      gap: 1.1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-    }
+      .dice-block {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 120px; /* stessa larghezza visiva dei blocchi HP/Money */
+      }
 
-    .block {
-      text-align: center;
-    }
+      #dice2 {
+        font-size: 4rem;
+        font-weight: bold;
+        color: #ff00ff;
+        text-shadow: 0 0 10px #ff00ff;
+        cursor: pointer;
+        user-select: none;
+        transition:
+          transform 0.25s ease,
+          opacity 0.25s ease;
+      }
 
-    h2 {
-      margin-bottom: 0.8rem;
-      font-size: 1.8rem;
-      color: #0f0;
-      text-shadow: 0 0 10px #0f0;
-    }
+      #dice2.shrink {
+        transform: scale(0);
+        opacity: 0;
+      }
 
-    .container {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      background: #222;
-      padding: 1rem;
-      border-radius: 0.75rem;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
-    }
+      #dice2.grow {
+        transform: scale(1);
+        opacity: 1;
+      }
 
-    button {
-      border: none;
-      border-radius: 0.75rem;
-      padding: 0.75rem 1.1rem;
-      font-size: 1.5rem;
-      font-weight: 600;
-      cursor: pointer;
-      background: #444;
-      color: #fff;
-      min-width: 3rem;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
-    }
+      .wrapper {
+        display: flex;
+        gap: 1.1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+      }
 
-    button:active {
-      transform: scale(0.96);
-      background: #666;
-    }
+      .block {
+        text-align: center;
+      }
 
-    input[type="number"] {
-      width: 5rem;
-      text-align: center;
-      font-size: 1.8rem;
-      padding: 0.3rem 0.5rem;
-      border-radius: 0.5rem;
-      border: 1px solid #555;
-      background: #000;
-      color: #0f0;
-      -moz-appearance: textfield;
-    }
+      h2 {
+        margin-bottom: 0.8rem;
+        font-size: 1.8rem;
+        color: #0f0;
+        text-shadow: 0 0 10px #0f0;
+      }
 
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+      .container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: #222;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      }
 
-    .note {
-  width: 100%;
-  max-width: 100%;
-  padding: 0 1rem;
-  box-sizing: border-box;
-}
+      button {
+        border: none;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1.1rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        background: #444;
+        color: #fff;
+        min-width: 3rem;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
 
+      button:active {
+        transform: scale(0.96);
+        background: #666;
+      }
 
-    textarea {
-  width: 100%;
-  height: clamp(120px, 25vh, 250px);
-  padding: 0.8rem;
-  font-size: clamp(0.9rem, 4vw, 1.2rem);
-  border-radius: 0.6rem;
-  border: 1px solid #555;
-  background: #000;
-  color: #0f0;
-  resize: vertical;
-  box-sizing: border-box;
-}
+      input[type="number"] {
+        width: 5rem;
+        text-align: center;
+        font-size: 1.8rem;
+        padding: 0.3rem 0.5rem;
+        border-radius: 0.5rem;
+        border: 1px solid #555;
+        background: #000;
+        color: #0f0;
+      }
 
-  </style>
-</head>
-<body>
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
 
-  <!-- DADO D6 -->
-  <div id="dice">1</div>
+      .note {
+        width: 100%;
+        max-width: 550px; /* o la larghezza che vuoi */
+        margin: 0 auto; /* CENTRA orizzontalmente */
+        padding: 0 1rem;
+        box-sizing: border-box;
+      }
 
-  <div class="wrapper">
+      textarea {
+        width: 100%;
+        height: clamp(120px, 25vh, 250px);
+        padding: 0.8rem;
+        font-size: clamp(0.9rem, 4vw, 1.2rem);
+        border-radius: 0.6rem;
+        border: 1px solid #555;
+        background: #000;
+        color: #0f0;
+        resize: vertical;
+        box-sizing: border-box;
+      }
 
-    <!-- BLOCCO HP -->
-    <div class="block">
-      <h2>HP</h2>
-      <div class="container">
-        <button data-target="hp" data-op="dec">-</button>
-        <input id="hp" type="number" inputmode="numeric" min="0" />
-        <button data-target="hp" data-op="inc">+</button>
+      .footer-row {
+        width: 100%;
+        max-width: 500px; /* stessa larghezza di HP + Money */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding: 0 1rem;
+        box-sizing: border-box;
+      }
+
+      .footer-left {
+        color: #0f0;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .footer-right {
+        color: #0f0;
+        text-align: right;
+        width: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- DADO D6 -->
+    <div class="dice-row">
+      <div class="block dice-block">
+        <div id="dice">1</div>
+      </div>
+
+      <div class="block dice-block">
+        <div id="dice2">1</div>
       </div>
     </div>
 
-    <!-- BLOCCO MONEY -->
-    <div class="block">
-      <h2>Money</h2>
-      <div class="container">
-        <button data-target="money" data-op="dec">-</button>
-        <input id="money" type="number" inputmode="numeric" min="0" />
-        <button data-target="money" data-op="inc">+</button>
+    <div class="wrapper">
+      <!-- BLOCCO HP -->
+      <div class="block">
+        <h2>HP</h2>
+        <div class="container">
+          <button data-target="hp" data-op="dec">-</button>
+          <input id="hp" type="number" inputmode="numeric" min="0" />
+          <button data-target="hp" data-op="inc">+</button>
+        </div>
+      </div>
+
+      <!-- BLOCCO MONEY -->
+      <div class="block">
+        <h2>Money</h2>
+        <div class="container">
+          <button data-target="money" data-op="dec">-</button>
+          <input id="money" type="number" inputmode="numeric" min="0" />
+          <button data-target="money" data-op="inc">+</button>
+        </div>
       </div>
     </div>
 
-  </div>
+    <!-- AREA DI TESTO SOTTO -->
+    <div class="note">
+      <textarea id="notes" placeholder="Notes, inventory, etc..."></textarea>
+    </div>
 
-  <!-- AREA DI TESTO SOTTO -->
-  <div class="note">
-    <textarea id="notes" placeholder="Notes, inventory, etc..."></textarea>
-  </div>
+    <div class="footer-row">
+      <div class="footer-left" id="soundToggle">Sound On</div>
+      <div class="footer-right">W</div>
+    </div>
 
-  <script>
-    /* --- CARICAMENTO INIZIALE --- */
-    function load(key, fallback) {
-      const v = localStorage.getItem(key);
-      return v !== null ? v : fallback;
-    }
+    <script>
+      /* --- CARICAMENTO INIZIALE --- */
+      function load(key, fallback) {
+        const v = localStorage.getItem(key);
+        return v !== null ? v : fallback;
+      }
 
-    document.getElementById("hp").value = load("hp", 20);
-    document.getElementById("money").value = load("money", 0);
-    document.getElementById("notes").value = load("notes", "");
-    document.getElementById("dice").textContent = load("dice", 1);
+      function playBeep(freq = 600, duration = 80) {
+        if (!soundEnabled) return;
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
 
-    /* --- FUNZIONI DI SUPPORTO --- */
-    function getValue(id) {
-      const el = document.getElementById(id);
-      const v = parseInt(el.value, 10);
-      return Number.isNaN(v) || v < 0 ? 0 : v;
-    }
+        osc.frequency.value = freq;
+        osc.type = "sine";
 
-    function setValue(id, v) {
-      if (v < 0) v = 0;
-      document.getElementById(id).value = v;
-      localStorage.setItem(id, v);
-    }
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(
+          0.001,
+          ctx.currentTime + duration / 1000,
+        );
 
-    /* --- BOTTONI + E - --- */
-    document.querySelectorAll("button[data-target]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.dataset.target;
-        const op = btn.dataset.op;
-        const current = getValue(id);
-        const next = op === "inc" ? current + 1 : current - 1;
-        setValue(id, next);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + duration / 1000);
+      }
+
+      document.getElementById("hp").value = load("hp", 20);
+      document.getElementById("money").value = load("money", 0);
+      document.getElementById("notes").value = load("notes", "");
+      document.getElementById("dice").textContent = load("dice", 1);
+      document.getElementById("dice2").textContent = load("dice2", 1);
+      let soundEnabled = load("sound", "on") === "on";
+      document.getElementById("soundToggle").textContent = soundEnabled
+        ? "Sound On"
+        : "Sound Off";
+
+      /* --- FUNZIONI DI SUPPORTO --- */
+      function getValue(id) {
+        const el = document.getElementById(id);
+        const v = parseInt(el.value, 10);
+        return Number.isNaN(v) || v < 0 ? 0 : v;
+      }
+
+      function setValue(id, v) {
+        if (v < 0) v = 0;
+        document.getElementById(id).value = v;
+        localStorage.setItem(id, v);
+      }
+
+      /* --- SOUND - --- */
+      document.getElementById("soundToggle").addEventListener("click", () => {
+        soundEnabled = !soundEnabled;
+        localStorage.setItem("sound", soundEnabled ? "on" : "off");
+        document.getElementById("soundToggle").textContent = soundEnabled
+          ? "Sound On"
+          : "Sound Off";
       });
-    });
 
-    /* --- INPUT NUMERICI --- */
-    document.querySelectorAll("input[type=number]").forEach(inp => {
-      inp.addEventListener("change", () => setValue(inp.id, getValue(inp.id)));
-      inp.addEventListener("blur", () => setValue(inp.id, getValue(inp.id)));
-    });
+      /* --- BOTTONI + E - --- */
+      document.querySelectorAll("button[data-target]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.target;
+          const op = btn.dataset.op;
+          const current = getValue(id);
+          const next = op === "inc" ? current + 1 : current - 1;
+          setValue(id, next);
+          playBeep(500, 70);
+        });
+      });
 
-    /* --- NOTE --- */
-    const notes = document.getElementById("notes");
-    notes.addEventListener("input", () => {
-      localStorage.setItem("notes", notes.value);
-    });
+      /* --- INPUT NUMERICI --- */
+      document.querySelectorAll("input[type=number]").forEach((inp) => {
+        inp.addEventListener("change", () =>
+          setValue(inp.id, getValue(inp.id)),
+        );
+        inp.addEventListener("blur", () => setValue(inp.id, getValue(inp.id)));
+      });
 
-    /* --- DADO D6 --- */
-const dice = document.getElementById("dice");
+      /* --- NOTE --- */
+      const notes = document.getElementById("notes");
+      notes.addEventListener("input", () => {
+        localStorage.setItem("notes", notes.value);
+      });
 
-dice.addEventListener("click", () => {
-  const newValue = Math.floor(Math.random() * 6) + 1;
+      /* --- DADO D6 --- */
+      const dice2 = document.getElementById("dice2");
 
-  // fase 1: shrink
-  dice.classList.add("shrink");
+      dice2.addEventListener("click", () => {
+        const newValue = Math.floor(Math.random() * 6) + 1;
+        playBeep(900, 120);
 
-  setTimeout(() => {
-    // cambio numero quando è invisibile
-    dice.textContent = newValue;
-    localStorage.setItem("dice", newValue);
+        dice2.classList.add("shrink");
 
-    // fase 2: grow
-    dice.classList.remove("shrink");
-    dice.classList.add("grow");
+        setTimeout(() => {
+          dice2.textContent = newValue;
+          localStorage.setItem("dice2", newValue);
 
-    // rimuovo grow dopo l’animazione
-    setTimeout(() => dice.classList.remove("grow"), 250);
+          dice2.classList.remove("shrink");
+          dice2.classList.add("grow");
 
-  }, 250); // durata shrink
-});
+          setTimeout(() => dice2.classList.remove("grow"), 250);
+        }, 250);
+      });
 
-  </script>
+      const dice = document.getElementById("dice");
 
-</body>
+      dice.addEventListener("click", () => {
+        const newValue = Math.floor(Math.random() * 6) + 1;
+        playBeep(800, 120);
+
+        // fase 1: shrink
+        dice.classList.add("shrink");
+
+        setTimeout(() => {
+          // cambio numero quando è invisibile
+          dice.textContent = newValue;
+          localStorage.setItem("dice", newValue);
+
+          // fase 2: grow
+          dice.classList.remove("shrink");
+          dice.classList.add("grow");
+
+          // rimuovo grow dopo l’animazione
+          setTimeout(() => dice.classList.remove("grow"), 250);
+        }, 250); // durata shrink
+      });
+    </script>
+  </body>
 </html>
